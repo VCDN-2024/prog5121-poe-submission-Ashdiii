@@ -1,5 +1,4 @@
 name: Workflow
-
 'on':
   push:
     branches:
@@ -8,43 +7,32 @@ name: Workflow
     branches:
       - main
   workflow_dispatch: null
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up working directory
-        run: mkdir -p /home/runner/work/prog5121-poe-submission-Ashdiii/prog5121-poe-submission-Ashdiii/src
-
-      - name: List contents of root directory
+      - name: List contents
         run: ls
-
-      - name: List contents of src directory
+      - name: compile classes
         working-directory: ./src
-        run: ls || echo "src directory does not exist"
-
-      - name: Compile classes
-        working-directory: ./src
-        run: |
-          javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" "./registrationandlogin/Registration.java" "./registrationandlogin/Task.java" "../test/test/registrationandlogin/RegistrationTest.java" || echo "Compilation failed"
-
+        run: >- 
+        
+          javac -cp
+          "../testresources/junit-platform-console-standalone-1.6.0.jar"
+          "./registrationandlogin/Registration.java" "./registrationandlogin/Task.java"
+          "../test/test/registrationandlogin/RegistrationTest.java"
       - name: List contents of src directory after compile
         working-directory: ./src/registrationandlogin
-        run: ls || echo "src/registrationandlogin directory does not exist"
-
-      - name: Create testresources/packageName directory
-        run: mkdir -p ./testresources/registrationandlogin || echo "Failed to create testresources/registrationandlogin directory"
-
-      - name: Copy compiled classes to testresources directory
+        run: ls
+      - name: create testresources/packageName directory
+        run: mkdir -p ./testresources/registrationandlogin
+      - name: copy compiled classes to testresources directory
         working-directory: ./src/registrationandlogin
-        run: cp Registration.class Task.class ../../testresources/registrationandlogin || echo "Failed to copy compiled classes"
-
-      - name: Copy compiled Test classes to testresources directory
-        working-directory: ./test/test/registrationandlogin
-        run: cp RegistrationTest.class ../../../testresources/registrationandlogin || echo "Failed to copy compiled test classes"
-
-      - name: List contents of testresources/registrationandlogin directory
-        working-directory: ./testresources/registrationandlogin
-        run: ls || echo "testresources/registrationandlogin directory does not exist"
+        run: cp -t  "../../test/registrationandlogin" Registration.class Task.class
+      - name: copy compiled Test classes to testresources directory
+        working-directory: ./test/registrationandlogin
+        run: cp -t  "../../testresources/registrationandlogin" RegistrationTest.class
+      - name: List contents test package
+        working-directory: ./test/registrationandlogin
+        run: ls      
